@@ -1,0 +1,131 @@
+= EAP7-1100 Add the ability for the CLI SSL security commands to be able to obtain a server certificate from Let's Encrypt
+:author:            Marek Marusic
+:email:             mmarusic@redhat.com
+:toc:               left
+:icons:             font
+:keywords:          cli,add,Let's,Encrypt,Let's Encrypt,security,commands
+:idprefix:
+:idseparator:       -
+
+== Overview
+
+WFCORE-3447 introduced high-level security commands (ssl enable-ssl-management and ssl enable-ssl-http-server)
+for enabling one-way and two-way SSL easily.
+To generate the server certificate,
+these high-level security commands made use of key-store management operations to generate a self-signed certificate.
+Since it is now possible to obtain certificates from the Let's Encrypt certificate authority using the CLI,
+the high-level security commands should be updated so that in addition to being able to generate a self-signed server certificate,
+they can also obtain a server certificate from Let's Encrypt.
+
+== Issue Metadata
+
+=== Issue
+
+* https://issues.jboss.org/browse/EAP7-1100[EAP7-1100]
+* https://issues.jboss.org/browse/WFCORE-4227[WFCORE-4227]
+
+=== Related Issues
+
+
+=== Dev Contacts
+
+* mailto:{email}[{author}]
+* mailto:jdenise@redhat.com[Jean-François Denise]
+
+=== QE Contacts
+
+* mailto:mchoma@redhat.com[Martin Choma]
+
+=== Affected Projects or Components
+
+* CLI
+
+=== Other Interested Projects
+
+== Requirements
+
+=== Hard Requirements
+* Add parameter '--lets-encrypt' to the 'enable-ssl-http-server' and 'enable-ssl-management' security commands
+* The parameter '--lets-encrypt' should be used in combination with the '--interactive' parameter
+* After '--lets-encrypt parameter' is used user is asked for several information needed to obtain the certificate:
+** Account Key-store file name
+** Account Key-store password
+** Certificate account name
+** Key-store file name
+** Key-store password
+** Contact url(s)
+** Domain name(s)
+** Alias
+** Enable SSL Mutual Authentication
+** Do you agree to Let's Encrypt terms of service?
+* Introduce '--ca-account=<name>' parameter to reuse existing --ca-account
+** This should be used mainly in combination with --interactive and --lets-encrypt parameters
+** User won't be asked to provide following items since they will be reused:
+*** Account Key-store file name
+*** Account Key-store password
+*** Certificate account name
+*** Do you agree to Let's Encrypt terms of service?
+
+
+==== Example of the certificate interactive setup:
+[source,bash]
+----
+[standalone@localhost:9990 /] security enable-ssl-management --interactive --lets-encrypt
+Please provide required pieces of information to enable SSL:
+
+Key-store file name (default management.keystore): a
+Password (blank generated):
+Account Key-store file name (default accounts.keystore.jks):
+Certificate account name (default CertAuthorityAccount):
+Your domain name (must be accessible by the Let's Encrypt server at 80 & 443 ports) [example.com]: da14549f.ngrok.io
+Your contact email [admin@admin.com]: admin@da14549f.ngrok.io
+Alias (blank generated):
+Do you agree to Let's Encrypt terms of service? y/n (blank n): y
+Enable SSL Mutual Authentication y/n (blank n):
+
+SSL options:
+Certificate will be obtained from Let's Encrypt server and will be valid for 90 days
+account key store file: accounts.keystore.jks
+certification authority account name: CertAuthorityAccount
+key store file: a
+domain name: da14549f.ngrok.io
+password: GwA82e2S
+alias: alias-42723f73-ec17-4c84-9c20-160180490cf8
+Server keystore file a will be generated in server configuration directory.
+
+Do you confirm y/n :y
+Subject    - CN=da14549f.ngrok.io
+Issuer     - CN=Let's Encrypt Authority X3, O=Let's Encrypt, C=US
+Valid From - Thu Nov 08 12:36:16 CET 2018
+Valid To   - Wed Feb 06 12:36:16 CET 2019
+MD5 : 83:e0:41:16:5e:f1:5b:b8:b3:4a:6f:94:5e:36:cd:03
+SHA1 : a2:98:38:82:9e:79:2c:11:3c:d4:2c:76:28:3e:6d:16:1c:7c:6f:25
+
+Subject    - CN=Let's Encrypt Authority X3,O=Let's Encrypt,C=US
+Issuer     - CN=DST Root CA X3, O=Digital Signature Trust Co.
+Valid From - Thu Mar 17 17:40:46 CET 2016
+Valid To   - Wed Mar 17 17:40:46 CET 2021
+MD5 : b1:54:09:27:4f:54:ad:8f:02:3d:3b:85:a5:ec:ec:5d
+SHA1 : e6:a3:b4:5b:06:2d:50:9b:33:82:28:2d:19:6e:fe:97:d5:95:6c:cb
+
+
+Accept certificate? [N]o, [T]emporarily, [P]ermanently : t
+Server reloaded.
+SSL enabled for http-interface
+ssl-context is ssl-context-7129ee02-add4-4acd-a39a-103a8c1ba495
+key-manager is key-manager-7129ee02-add4-4acd-a39a-103a8c1ba495
+key-store   is key-store-7129ee02-add4-4acd-a39a-103a8c1ba495
+----
+
+=== Nice-to-Have Requirements
+* Possibility to reuse key-store file, account key store file, Certificate account name
+
+=== Non-Requirements
+* Possibility to renew expired certificate
+* Possibility to revoke certificate
+
+== Test Plan
+
+== Community Documentation
+https://github.com/wildfly/wildfly/blob/master/docs/src/main/asciidoc/_elytron/Using_the_Elytron_Subsystem.adoc#configure-ssltls[Documentation]
+should be updated with new "--lets-encrypt" and "--ca-account" parameters
