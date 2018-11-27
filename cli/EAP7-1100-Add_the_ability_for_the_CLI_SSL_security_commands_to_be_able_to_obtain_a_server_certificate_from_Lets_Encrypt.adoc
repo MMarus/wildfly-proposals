@@ -50,20 +50,21 @@ they can also obtain a server certificate from Let's Encrypt.
 * After '--lets-encrypt parameter' is used user is asked for several information needed to obtain the certificate:
 ** Account Key-store file name
 ** Account Key-store password
-** Certificate account name
 ** Key-store file name
 ** Key-store password
+** Certificate account name
 ** Contact url(s)
 ** Domain name(s)
-** Alias
-** Enable SSL Mutual Authentication
+** Certificate alias
 ** Do you agree to Let's Encrypt terms of service?
+** Enable SSL Mutual Authentication
 * Introduce '--ca-account=<name>' parameter to reuse existing --ca-account
 ** This should be used mainly in combination with --interactive and --lets-encrypt parameters
 ** User won't be asked to provide following items since they will be reused:
 *** Account Key-store file name
 *** Account Key-store password
 *** Certificate account name
+*** Contact url(s)
 *** Do you agree to Let's Encrypt terms of service?
 
 
@@ -73,27 +74,51 @@ they can also obtain a server certificate from Let's Encrypt.
 [standalone@localhost:9990 /] security enable-ssl-management --interactive --lets-encrypt
 Please provide required pieces of information to enable SSL:
 
-Key-store file name (default management.keystore): a
+Info for account key-store:
+File name (default accounts.keystore.jks):
 Password (blank generated):
-Account Key-store file name (default accounts.keystore.jks):
-Certificate account name (default CertAuthorityAccount):
-Your domain name (must be accessible by the Let's Encrypt server at 80 & 443 ports) [example.com]: da14549f.ngrok.io
-Your contact email [admin@admin.com]: admin@da14549f.ngrok.io
-Alias (blank generated):
+
+Info for certificate authority account:
+Account name [admin]:
+Contact email [admin@admin.com]:
+Password (blank generated):
 Do you agree to Let's Encrypt terms of service? y/n (blank n): y
-Enable SSL Mutual Authentication y/n (blank n):
 
-SSL options:
-Certificate will be obtained from Let's Encrypt server and will be valid for 90 days
-account key store file: accounts.keystore.jks
-certification authority account name: CertAuthorityAccount
-key store file: a
-domain name: da14549f.ngrok.io
+Info for certificate key-store:
+File name (default management.keystore): a
+Password (blank generated):
+
+Info for certificate:
+Alias (blank generated):
+Your domain name (must be accessible by the Let's Encrypt server at 80 & 443 ports) [example.com]:
+
+Enable SSL Mutual Authentication y/n (blank n): n
+
+
+
+Following resources will be created:
+
+Account key store:
+file: accounts.keystore.jks
 password: GwA82e2S
-alias: alias-42723f73-ec17-4c84-9c20-160180490cf8
-Server keystore file a will be generated in server configuration directory.
 
+Certificate authority account with following info:
+Account name: admin
+Contact email: admin@admin.com
+Password: GwA82e2S
+Do you agree to Let's Encrypt terms of service?: y
+
+Certificate key-store:
+File name: keystore
+Password: GwA82e2S
+
+Certificate will be obtained from Let's Encrypt server and will be valid for 90 days with:
+Alias: alias-42723f73-ec17-4c84-9c20-160180490cf8
+Domain name: da14549f.ngrok.io
+
+Server account key-store file and key-store file a will be generated in server configuration directory.
 Do you confirm y/n :y
+
 Subject    - CN=da14549f.ngrok.io
 Issuer     - CN=Let's Encrypt Authority X3, O=Let's Encrypt, C=US
 Valid From - Thu Nov 08 12:36:16 CET 2018
