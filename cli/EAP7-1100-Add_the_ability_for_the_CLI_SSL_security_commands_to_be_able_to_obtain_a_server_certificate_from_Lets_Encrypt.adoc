@@ -74,49 +74,47 @@ they can also obtain a server certificate from Let's Encrypt.
 [standalone@localhost:9990 /] security enable-ssl-management --interactive --lets-encrypt
 Please provide required pieces of information to enable SSL:
 
-Info for account key-store:
+Let's Encrypt account key-store:
 File name (default accounts.keystore.jks):
 Password (blank generated):
 
-Info for certificate authority account:
+Let's Encrypt certificate authority account:
 Account name [admin]:
 Contact email [admin@admin.com]:
 Password (blank generated):
+
+Let's Encrypt TOS (https://community.letsencrypt.org/tos)
 Do you agree to Let's Encrypt terms of service? y/n (blank n): y
 
-Info for certificate key-store:
-File name (default management.keystore): a
+Certificate info:
+Key-store file name (default management.keystore):
 Password (blank generated):
-
-Info for certificate:
+Domain name (must be accessible by the Let's Encrypt server at 80 & 443 ports) [example.com]:
 Alias (blank generated):
-Your domain name (must be accessible by the Let's Encrypt server at 80 & 443 ports) [example.com]:
 
 Enable SSL Mutual Authentication y/n (blank n): n
 
-
-
-Following resources will be created:
-
-Account key store:
+Let's Encrypt options:
+Let's Encrypt Account key store:
 file: accounts.keystore.jks
 password: GwA82e2S
+Account keystore file a will be generated in server configuration directory.
 
-Certificate authority account with following info:
+Let's Encrypt Certificate authority account with following info:
 Account name: admin
 Contact email: admin@admin.com
 Password: GwA82e2S
+
 Do you agree to Let's Encrypt terms of service?: y
 
-Certificate key-store:
-File name: keystore
-Password: GwA82e2S
+SSL options:
+key store file: a
+domain name: da14549f.ngrok.io
+password: GwA82e2S
+alias: alias-42723f73-ec17-4c84-9c20-160180490cf8
+Certificate will be obtained from Let's Encrypt server and will be valid for 90 days.
+Server keystore file a will be generated in server configuration directory.
 
-Certificate will be obtained from Let's Encrypt server and will be valid for 90 days with:
-Alias: alias-42723f73-ec17-4c84-9c20-160180490cf8
-Domain name: da14549f.ngrok.io
-
-Server account key-store file and key-store file a will be generated in server configuration directory.
 Do you confirm y/n :y
 
 Subject    - CN=da14549f.ngrok.io
